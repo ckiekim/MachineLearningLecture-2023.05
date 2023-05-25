@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Crawling{% endblock %}
+{% block weather %}{{ weather | safe() }}{% endblock %}
+{% block additional_head %} 
+    <style>
+        th  {text-align: center;}
+    </style>
+{% endblock %}
+{% block subtitle %}지니차트 Top 50{% endblock %}
+{% block content %}
+    <table class="table" style="margin-bottom: 100px;">
+        <tr>
+            <th style="width: 8%;">순위</th>
+            <th style="width: 10%;">이미지</th>
+            <th style="width: 30%;">제목</th>
+            <th style="width: 26%;">아티스트</th>
+            <th style="width: 26%;">앨범명</th>
+        </tr>
+        {% for song in song_list %}
+        <tr>
+            <td style="text-align: center;">{{song.rank}}</td>
+            <td style="text-align: center;"><img src="{{song.img}}" height="32"></td>
+            <td>{{song.title}}</a></td>
+            <td>{{song.artist}}</td>
+            <td>{{song.album}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

@@ -3,6 +3,11 @@ test.py
 test.ipynb
 model/
 credits.csv
+img/
+upload/
+keys/
+password.txt
+*.db
 
 # gitignore template for Jupyter Notebooks
 # website: http://jupyter.org/
