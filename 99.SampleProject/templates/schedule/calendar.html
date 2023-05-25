@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}스케쥴{% endblock %}
+{% block weather %}{{ weather | safe() }}{% endblock %}
+{% block additional_head %}
+    <style>
+        th { text-align: center; width: 14.28%; }
+        td { height: {{600/number_of_weeks}}px; }
+    </style>
+{% endblock %}
+{% block subtitle %}일정표{% endblock %}
+{% block content %}
+    <div class="d-flex justify-content-between">
+        <div>{{today}}</div>
+        <div>
+            <a href="/schedule/calendar/left2"><i class="fa-solid fa-angles-left"></i></a>
+            <a href="/schedule/calendar/left"><i class="fa-solid fa-angle-left ms-2"></i></a>
+            <span class="badge bg-primary mx-2">{{year}}.{{month}}</span>
+            <a href="/schedule/calendar/right"><i class="fa-solid fa-angle-right me-2"></i></a>
+            <a href="/schedule/calendar/right2"><i class="fa-solid fa-angles-right"></i></a>
+        </div>
+        <div>
+            <a href="#"><i class="fa-solid fa-pen me-3"></i></a>
+            <a href="#"><i class="fa-solid fa-table-list"></i></a>
+        </div>
+    </div>
+    <table class="table table-bordered mt-2">
+        <tr>
+            <th class="text-danger">일</th>
+            <th>월</th><th>화</th><th>수</th><th>목</th><th>금</th>
+            <th class="text-primary">토</th>
+        </tr>
+        {% for week in schedule_month %}
+        <tr>
+            <td class="text-danger">{{week[0]}}</th>
+            <td>{{week[1]}}</td>
+            <td>{{week[2]}}</td>
+            <td>{{week[3]}}</td>
+            <td>{{week[4]}}</td>
+            <td>{{week[5]}}</td>
+            <td class="text-primary">{{week[6]}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+

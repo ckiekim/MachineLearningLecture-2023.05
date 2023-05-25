@@ -5,12 +5,14 @@ import my_util.map_util as mu
 import my_util.image_util as iu
 import os, random, json
 from bp_user.user import user_bp
+from bp_schedule.schedule import schdedule_bp
 
 app = Flask(__name__)
 app.secret_key = 'qwert12345'
 app.config['SESSION_COOKIE_PATH'] = '/'
 
 app.register_blueprint(user_bp, url_prefix='/user')
+app.register_blueprint(schdedule_bp, url_prefix='/schedule')
 
 # flask 2.3 에서는 이 코드만 사용 가능
 """ with app.app_context():
@@ -105,18 +107,6 @@ def siksin():
         return render_template('crawling/siksin_res.html', food_list=food_list, 
                                menu=menu, weather=get_weather(app), place=place, 
                                quote=quote, addr=addr)
-
-@app.route('/schedule')
-def schedule():
-    try:
-        _ = session['uid']
-    except:
-        flash('스케쥴을 확인하려면 로그인하여야 합니다.')
-        return redirect('/user/login')
-    
-    menu = {'ho':0, 'us':0, 'cr':0, 'sc':1}
-    return render_template('schedule.html', menu=menu, weather=get_weather(app), 
-                           quote=quote, addr=addr)
 
 if __name__ == '__main__':
     app.run(debug=True)

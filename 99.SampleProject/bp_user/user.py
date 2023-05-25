@@ -34,6 +34,8 @@ def login():
 def logout():
     session.pop('uid', None)       # 설정한 세션값을 삭제 
     session.pop('uname', None)
+    session.pop('year', None)
+    session.pop('month', None)
     return redirect('/')
 
 @user_bp.route('/register', methods=['GET','POST'])
