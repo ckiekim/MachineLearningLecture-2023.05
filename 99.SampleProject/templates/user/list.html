@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}사용자 목록{% endblock %}
+{% block weather %}{{ weather | safe() }}{% endblock %}
+{% block additional_head %} 
+    <style>
+        th, td  {text-align: center;}
+    </style>
+{% endblock %}
+{% block subtitle %}사용자 목록{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8">
+            <table class="table" style="margin-bottom: 100px;">
+                <tr>
+                    <th style="width: 20%;">사용자 ID</th>
+                    <th style="width: 20%;">사용자 이름</th>
+                    <th style="width: 40%;">이메일</th>
+                    <th style="width: 20%;">액션</th>
+                </tr>
+                {% for user in user_list %}
+                <tr>
+                    <td>{{user[0]}}</td>
+                    <td>{{user[2]}}</td>
+                    <td>{{user[3]}}</td>
+                    <td>
+                        <a href="#"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="#"><i class="fa-solid fa-trash-can ms-2"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="col-2"></div>
+    </div>
+{% endblock %}
