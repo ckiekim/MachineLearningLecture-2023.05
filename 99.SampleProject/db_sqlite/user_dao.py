@@ -34,3 +34,25 @@ def get_user_list():
     cur.close()
     conn.close()
     return rows
+
+def update_user(params):
+    conn = sqlite3.connect('./db_sqlite/project.db')
+    cur = conn.cursor()
+
+    sql = 'update user set pwd=?, uname=?, email=? where uid=?'
+    cur.execute(sql, params)
+    conn.commit()
+
+    cur.close()
+    conn.close()
+
+def delete_user(uid):
+    conn = sqlite3.connect('./db_sqlite/project.db')
+    cur = conn.cursor()
+
+    sql = 'delete from user where uid=?'
+    cur.execute(sql, (uid,))
+    conn.commit()
+
+    cur.close()
+    conn.close()

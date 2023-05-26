@@ -2,14 +2,13 @@ from flask import Blueprint, request, render_template, session, current_app
 from flask import redirect, flash
 import json, os, calendar
 from datetime import date, timedelta
-from pprint import pprint
-#import db_sqlite.user_dao as udao
+import db_sqlite.schedule_dao as sdao
 
 schdedule_bp = Blueprint('schdedule_bp', __name__)
 menu = {'ho':0, 'us':0, 'cr':0, 'sc':1}
 
-@schdedule_bp.route('/calendar/<arrow>')        # localhost:5000/schdedule/calendar 이 처리되는 곳
-def table(arrow):
+@schdedule_bp.route('/calendar/<arrow>')
+def calendar_func(arrow):
     today = date.today()
     date_name = '월 화 수 목 금 토 일'.split()[today.weekday()]
     year = today.year

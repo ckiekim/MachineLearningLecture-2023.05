@@ -65,3 +65,30 @@ def register():
 def list():
     user_list = udao.get_user_list()
     return render_template('user/list.html', user_list=user_list, menu=menu)
+
+@user_bp.route('/update/<uid>', methods=['GET','POST'])
+def update(uid):
+    user = udao.get_user(uid)
+    if request.method == 'GET':
+        return render_template('user/update.html', user=user, menu=menu)
+    else:
+        pwd = request.form['pwd']
+        pwd2 = request.form['pwd2']
+        if pwd != None and pwd == pwd2:
+            pwd_sha256 = hashlib.sha256(pwd.encode())
+            hashed_pwd = base64.b64encode(pwd_sha256.digest()).decode('utf-8')
+        else:
+            hashed_pwd = user[1]
+        uname = request.form['uname']
+        email = request.form['email']
+        udao.update_user((hashed_pwd, uname, email, uid))
+        return redirect('/user/list')
+
+@user_bp.route('/delete/<uid>')
+def delete(uid):
+    return render_template('user/delete.html', uid=uid, menu=menu)
+
+@user_bp.route('/delete_confirm/<uid>')
+def delete_confirm(uid):
+    udao.delete_user(uid)
+    return redirect('/user/logout')
