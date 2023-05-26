@@ -31,13 +31,39 @@
         </tr>
         {% for week in schedule_month %}
         <tr>
-            <td class="text-danger">{{week[0]}}</th>
-            <td>{{week[1]}}</td>
-            <td>{{week[2]}}</td>
-            <td>{{week[3]}}</td>
-            <td>{{week[4]}}</td>
-            <td>{{week[5]}}</td>
-            <td class="text-primary">{{week[6]}}</td>
+            {% for day in week %}
+            <td {% if today.replace('-','')[:8] == day.sdate %}style="background-color: #efffff;"{% endif %}>
+                <div class="d-flex justify-content-between">
+                {% if day.isOtherMonth == 1 %}
+                    {% if day.webDate == 0 or day.isHoliday == 1 %}
+                        <div class="text-danger" style="opacity: 0.5;"><strong>{{day.day}}</strong></div>
+                    {% else %}
+                        {% if day.webDate == 6 %}
+                            <div class="text-primary" style="opacity: 0.5;"><strong>{{day.day}}</strong></div>
+                        {% else %}
+                            <div style="opacity: 0.5;"><strong>{{day.day}}</strong></div>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    {% if day.webDate == 0 or day.isHoliday == 1 %}
+                        <div class="text-danger"><strong>{{day.day}}</strong></div>
+                    {% else %}
+                        {% if day.webDate == 6 %}
+                            <div class="text-primary"><strong>{{day.day}}</strong></div>
+                        {% else %}
+                            <div><strong>{{day.day}}</strong></div>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+                    <div>
+                    {% for anniv in day.annivList %}
+                        {% if not loop.first %}&middot;{% endif %}
+                        {{anniv[1]}}
+                    {% endfor %}
+                    </div>
+                </div>
+            </td>
+            {% endfor %}
         </tr>
         {% endfor %}
     </table>

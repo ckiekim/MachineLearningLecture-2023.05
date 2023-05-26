@@ -2,7 +2,8 @@ from flask import Blueprint, request, render_template, session, current_app
 from flask import redirect, flash
 import json, os, calendar
 from datetime import date, timedelta
-import db_sqlite.schedule_dao as sdao
+import my_util.sched_util as su
+
 
 schdedule_bp = Blueprint('schdedule_bp', __name__)
 menu = {'ho':0, 'us':0, 'cr':0, 'sc':1}
@@ -49,22 +50,22 @@ def calendar_func(arrow):
         prev_sunday = first_day - timedelta(days=(first_date+1)%7)
         for i in range(first_date+1):
             oneday = prev_sunday + timedelta(days=i)
-            week.append(oneday.strftime('%Y%m%d'))
+            week.append(su.gen_schday(oneday, month))
     for k, i in enumerate(range((first_date + 1) % 7, 7)):
         oneday = date(year, month, k+1)
-        week.append(oneday.strftime('%Y%m%d'))
+        week.append(su.gen_schday(oneday, month))
     schedule_month.append(week)
     number_of_weeks += 1
 
     # 둘째 주 ~ 마지막 전 주
-    day = 7 - first_date
+    day = 8 - (first_date+1) % 7
     duration = last_day - day + 1
     count = duration // 7
     for i in range(count):
         week = []
         for k in range(7):
             oneday = date(year, month, i*7+k+day)
-            week.append(oneday.strftime('%Y%m%d'))
+            week.append(su.gen_schday(oneday, month))
         schedule_month.append(week)
     number_of_weeks += count
 
@@ -73,8 +74,8 @@ def calendar_func(arrow):
         start_day = count * 7 + day
         week = []
         for i in range(7):
-            next_day = date(year, month, start_day) + timedelta(days=i)
-            week.append(next_day.strftime('%Y%m%d'))
+            oneday = date(year, month, start_day) + timedelta(days=i)
+            week.append(su.gen_schday(oneday, month))
         schedule_month.append(week)
         number_of_weeks += 1
 
