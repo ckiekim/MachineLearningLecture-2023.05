@@ -3,7 +3,7 @@ from flask import redirect, flash
 import json, os, calendar
 from datetime import date, timedelta
 import my_util.sched_util as su
-
+import db_sqlite.anniversary_dao as adao
 
 schdedule_bp = Blueprint('schdedule_bp', __name__)
 menu = {'ho':0, 'us':0, 'cr':0, 'sc':1}
@@ -50,10 +50,10 @@ def calendar_func(arrow):
         prev_sunday = first_day - timedelta(days=(first_date+1)%7)
         for i in range(first_date+1):
             oneday = prev_sunday + timedelta(days=i)
-            week.append(su.gen_schday(oneday, month))
+            week.append(su.gen_schday(oneday, month, session['uid']))
     for k, i in enumerate(range((first_date + 1) % 7, 7)):
         oneday = date(year, month, k+1)
-        week.append(su.gen_schday(oneday, month))
+        week.append(su.gen_schday(oneday, month, session['uid']))
     schedule_month.append(week)
     number_of_weeks += 1
 
@@ -65,7 +65,7 @@ def calendar_func(arrow):
         week = []
         for k in range(7):
             oneday = date(year, month, i*7+k+day)
-            week.append(su.gen_schday(oneday, month))
+            week.append(su.gen_schday(oneday, month, session['uid']))
         schedule_month.append(week)
     number_of_weeks += count
 
@@ -75,12 +75,24 @@ def calendar_func(arrow):
         week = []
         for i in range(7):
             oneday = date(year, month, start_day) + timedelta(days=i)
-            week.append(su.gen_schday(oneday, month))
+            week.append(su.gen_schday(oneday, month, session['uid']))
         schedule_month.append(week)
         number_of_weeks += 1
 
-
-
+    time_list = su.gen_time()
     return render_template('schedule/calendar.html', menu=menu, 
-                           today=today, year=year, month=f'{month:02d}',
+                           today=today, year=year, month=f'{month:02d}', timeList=time_list,
                            schedule_month=schedule_month, number_of_weeks=number_of_weeks)
+
+@schdedule_bp.route('/insertAnniv', methods=['POST'])
+def insert_anniv():
+    title = request.form['title']
+    anniv_date = request.form['annivDate'].replace('-','')
+    try:
+        _ = request.form['holiday']
+        is_holiday = 1
+    except:
+        is_holiday = 0
+
+    adao.insert_anniv((title, anniv_date, is_holiday))
+    return redirect('/schedule/calendar/this')
