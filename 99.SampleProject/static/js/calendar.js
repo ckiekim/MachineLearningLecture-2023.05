@@ -4,10 +4,13 @@
  */
 
 var schedClicked = false;
+var annivClicked = false;
  
 function cellClick(date) {
 	if (schedClicked)
 		schedClicked = false;
+	else if (annivClicked)
+		annivClicked = false;
 	else {
 		date = date + '';		// number type을 문자열로 변환
 		const dateForm = date.substring(0,4)+'-'+date.substring(4,6)+'-'+date.substring(6,8);
@@ -61,4 +64,30 @@ function deleteSchedule() {
 
 function addAnniversary() {
 	$('#addAnnivModal').modal('show');
+}
+
+function annivClick(aid) {
+	annivClicked = true;
+	$.ajax({
+		type: 'GET',
+		url: '/schedule/detailAnniv/' + aid,
+		success: function(jsonAnniv) {
+			let anniv = JSON.parse(jsonAnniv);
+			$('#aid').val(anniv.aid);
+			$('#aname2').val(anniv.aname);
+			if (anniv.isHoliday == 1)
+				$('#holiday2').prop('checked', true);
+			let day = anniv.adate;
+			$('#annivDate2').val(day.substring(0,4) + '-' + day.substring(4,6) + '-' + day.substring(6));
+			$('#updateAnnivModal').modal('show');
+		}
+	});
+}
+
+function deleteAnniv() {
+	let aid = $('#aid').val();
+	const answer = confirm('정말로 삭제하시겠습니까?');
+	if (answer) {
+		location.href = '/schedule/deleteAnniv/' + aid;
+	}
 }

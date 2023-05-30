@@ -58,7 +58,7 @@
                     <div>
                     {% for anniv in day.annivList %}
                         {% if not loop.first %}&middot;{% endif %}
-                        {{anniv[1]}}
+                        <span onclick="annivClick({{anniv[0]}})">{{anniv[1]}}</span>
                     {% endfor %}
                     </div>
                 </div>
@@ -241,9 +241,9 @@
 						<table class="table table-borderless">
 	                        <tr>
 	                            <td>
-	                                <label for="title">제목</label>
+	                                <label for="aname">이름</label>
 	                                <input class="ms-5 me-2" type="checkbox" name="holiday">공휴일
-	                                <input class="form-control" type="text" id="title" name="title">
+	                                <input class="form-control" type="text" id="aname" name="aname">
 	                            </td>
 	                        </tr>
 	                        <tr>
@@ -259,6 +259,47 @@
 	                            </td>
 	                        </tr>
 	                    </table>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal" id="updateAnnivModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">기념일 조회/수정/삭제</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+			
+				<!-- Modal body -->
+				<div class="modal-body">
+					<form action="/schedule/updateAnniv" method="post">
+						<input type="hidden" name="aid" id="aid">
+						<table class="table table-borderless">
+							<tr>
+								<td>
+									<label for="aname2">이름</label>
+									<input class="ms-5 me-2" type="checkbox" id="holiday2" name="holiday">공휴일
+									<input class="form-control" type="text" id="aname2" name="aname">
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for="annivDate2">날짜</label>
+									<input class="form-control" type="date" id="annivDate2" name="annivDate">
+								</td>
+							</tr>
+							<tr>
+								<td style="text-align: right;">
+									<button class="btn btn-primary me-1" type="submit">수정</button>
+	                                <button class="btn btn-danger me-1" type="button" data-bs-dismiss="modal" onclick="deleteAnniv()">삭제</button>
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">종료</button>
+								</td>
+							</tr>
+						</table>
 					</form>
 				</div>
 			</div>

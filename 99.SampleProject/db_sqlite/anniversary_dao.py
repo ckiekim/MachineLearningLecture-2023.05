@@ -6,7 +6,7 @@ def get_anniv(aid):
 
     sql = 'select * from anniversary where aid=?'
     cur.execute(sql, (aid,))
-    row = cur.fetchall()
+    row = cur.fetchone()
 
     cur.close()
     conn.close()

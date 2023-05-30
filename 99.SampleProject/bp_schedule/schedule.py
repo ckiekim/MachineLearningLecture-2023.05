@@ -91,9 +91,16 @@ def calendar_func(arrow):
                            today=today, year=year, month=f'{month:02d}', timeList=time_list,
                            schedule_month=schedule_month, number_of_weeks=number_of_weeks)
 
+# Ajax로 클라이언트로부터 aid를 받아서, 상세 내용을 클라이언트에게 전달
+@schdedule_bp.route('/detailAnniv/<aid>')
+def detail_anniv(aid):
+    anniv = adao.get_anniv(int(aid))
+    anniv_dict = {'aid':aid, 'aname':anniv[1], 'adate':anniv[2], 'isHoliday':anniv[3]}
+    return json.dumps(anniv_dict)
+
 @schdedule_bp.route('/insertAnniv', methods=['POST'])
 def insert_anniv():
-    title = request.form['title']
+    aname = request.form['aname']
     anniv_date = request.form['annivDate'].replace('-','')
     try:
         _ = request.form['holiday']
@@ -101,7 +108,26 @@ def insert_anniv():
     except:
         is_holiday = 0
 
-    adao.insert_anniv((title, anniv_date, is_holiday))
+    adao.insert_anniv((aname, anniv_date, is_holiday))
+    return redirect('/schedule/calendar/this')
+
+@schdedule_bp.route('/updateAnniv', methods=['POST'])
+def update_anniv():
+    try:
+        _ = request.form['holiday']
+        is_holiday = 1
+    except:
+        is_holiday = 0
+    aid = request.form['aid']
+    aname = request.form['aname']
+    anniv_date = request.form['annivDate'].replace('-','')
+    params = (aname, anniv_date, is_holiday, aid)
+    adao.update_anniv(params)
+    return redirect('/schedule/calendar/this')
+
+@schdedule_bp.route('/deleteAnniv/<aid>')
+def delete_anniv(aid):
+    adao.delete_anniv(int(aid))
     return redirect('/schedule/calendar/this')
 
 # Ajax로 클라이언트로부터 sid를 받아서, 상세 내용을 클라이언트에게 전달
