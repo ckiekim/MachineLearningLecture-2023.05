@@ -4,6 +4,7 @@ import my_util.crawl_util as cu
 import my_util.map_util as mu
 import my_util.image_util as iu
 import os, random, json
+from bp_chatbot.chatbot import chatbot_bp
 from bp_user.user import user_bp
 from bp_schedule.schedule import schdedule_bp
 
@@ -11,6 +12,7 @@ app = Flask(__name__)
 app.secret_key = 'qwert12345'
 app.config['SESSION_COOKIE_PATH'] = '/'
 
+app.register_blueprint(chatbot_bp, url_prefix='/chatbot')
 app.register_blueprint(user_bp, url_prefix='/user')
 app.register_blueprint(schdedule_bp, url_prefix='/schedule')
 
@@ -70,34 +72,34 @@ def change_profile():
 
 @app.route('/')
 def home():
-    menu = {'ho':1, 'us':0, 'cr':0, 'sc':0}
+    menu = {'ho':1, 'us':0, 'cr':0, 'cb':0, 'sc':0}
     return render_template('home.html', menu=menu, weather=get_weather(app),
                            quote=quote, addr=addr)
 
 @app.route('/interpark')
 def interpark():
-    menu = {'ho':0, 'us':0, 'cr':1, 'sc':0}
+    menu = {'ho':0, 'us':0, 'cr':1, 'cb':0, 'sc':0}
     book_list = cu.interpark()
     return render_template('crawling/interpark.html', book_list=book_list, 
                            menu=menu, weather=get_weather(app), quote=quote, addr=addr)
 
 @app.route('/genie')
 def genie():
-    menu = {'ho':0, 'us':0, 'cr':1, 'sc':0}
+    menu = {'ho':0, 'us':0, 'cr':1, 'cb':0, 'sc':0}
     song_list = cu.genie()
     return render_template('crawling/genie.html', song_list=song_list, 
                            menu=menu, weather=get_weather(app), quote=quote, addr=addr)
 
 @app.route('/genie_jquery')
 def genie_jquery():
-    menu = {'ho':0, 'us':0, 'cr':1, 'sc':0}
+    menu = {'ho':0, 'us':0, 'cr':1, 'cb':0, 'sc':0}
     song_list = cu.genie()
     return render_template('crawling/genie_jquery.html', song_list=song_list, 
                            menu=menu, weather=get_weather(app), quote=quote, addr=addr)
 
 @app.route('/siksin', methods=['GET', 'POST'])
 def siksin():
-    menu = {'ho':0, 'us':0, 'cr':1, 'sc':0}
+    menu = {'ho':0, 'us':0, 'cr':1, 'cb':0, 'sc':0}
     if request.method == 'GET':
         return render_template('crawling/siksin.html', menu=menu, weather=get_weather(app), 
                                quote=quote, addr=addr)
