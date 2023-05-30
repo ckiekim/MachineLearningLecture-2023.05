@@ -4,7 +4,8 @@ from urllib.parse import unquote
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
-import json, os
+import json, os, requests
+from urllib.parse import quote
 
 chatbot_bp = Blueprint('chatbot_bp', __name__)
 menu = {'ho':0, 'us':0, 'cr':0, 'cb':1, 'sc':0}
@@ -30,4 +31,19 @@ def counsel():
         result = {
             'category':answer.구분, 'user':user_input, 'chatbot':answer.챗봇, 'similarity':answer.유사도
         }
+        return json.dumps(result)
+
+@chatbot_bp.route('/bard', methods=['GET','POST']) 
+def bard():
+    if request.method == 'GET':
+        return render_template('chatbot/bard.html', menu=menu)
+    else:
+        with open(os.path.join(current_app.static_folder, 'keys/bardapikey.txt')) as f:
+            bard_key = f.read()
+        headers = { 'Authorization': f'Bearer {bard_key}', 
+                    'Content-Type': 'text/plain' }
+        user_input = request.form['userInput']
+        data = { "input": quote(user_input) }
+        req = requests.post('https://api.bardapi.dev/chat', headers=headers, json=data)
+        result = { 'user':user_input, 'chatbot':req.json()['output'] }
         return json.dumps(result)

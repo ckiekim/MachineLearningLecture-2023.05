@@ -4,7 +4,7 @@ import hashlib, base64, json, os
 import db_sqlite.user_dao as udao
 
 user_bp = Blueprint('user_bp', __name__)
-menu = {'ho':0, 'us':1, 'cr':0, 'sc':0}
+menu = {'ho':0, 'us':1, 'cr':0, 'cb':0, 'sc':0}
 
 @user_bp.route('/login', methods=['GET','POST'])    # localhost:5000/user/login 이 처리되는 곳
 def login():
