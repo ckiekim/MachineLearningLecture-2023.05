@@ -19,7 +19,7 @@ def login():
             pwd_sha256 = hashlib.sha256(pwd.encode())
             hashed_pwd = base64.b64encode(pwd_sha256.digest()).decode('utf-8')
             if hashed_pwd == db_pwd:
-                flash('환영합니다.')        # 초기 화면으로 보내줌
+                flash(f'{user_info[2]}님 환영합니다.')        # 초기 화면으로 보내줌
                 session['uid'] = uid        # 세션값을 설정함으로써 사용자가 로그인하였음을 알게 해줌
                 session['uname'] = user_info[2]
                 return redirect('/')

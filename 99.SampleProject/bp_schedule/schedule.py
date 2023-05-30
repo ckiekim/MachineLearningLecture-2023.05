@@ -4,6 +4,7 @@ import json, os, calendar
 from datetime import date, timedelta
 import my_util.sched_util as su
 import db_sqlite.anniversary_dao as adao
+import db_sqlite.schedule_dao as sdao
 
 schdedule_bp = Blueprint('schdedule_bp', __name__)
 menu = {'ho':0, 'us':0, 'cr':0, 'sc':1}
@@ -15,6 +16,12 @@ def calendar_func(arrow):
     year = today.year
     month = today.month
     today = f'{year}-{month:02d}-{today.day:02d}({date_name})'
+    try:
+        _ = session['uid']
+    except:
+        flash('로그인을 먼저 하세요.')
+        return redirect('/user/login')
+
     try: 
         _ = session['year']
         year = int(session['year'])
@@ -95,4 +102,56 @@ def insert_anniv():
         is_holiday = 0
 
     adao.insert_anniv((title, anniv_date, is_holiday))
+    return redirect('/schedule/calendar/this')
+
+# Ajax로 클라이언트로부터 sid를 받아서, 상세 내용을 클라이언트에게 전달
+@schdedule_bp.route('/detail/<sid>')
+def detail(sid):
+    sched = sdao.get_sched(int(sid))
+    day = f'{sched[2][:4]}-{sched[2][4:6]}-{sched[2][6:]} '
+    sched_dict = {'sid':sid, 'title':sched[3], 'place':sched[4],
+                  'startTime':day+sched[5], 'endTime':day+sched[6], 
+                  'isImportant':sched[7], 'memo':sched[8]}
+    return json.dumps(sched_dict)
+
+@schdedule_bp.route('/insert', methods=['POST'])
+def insert():
+    try:
+        _ = request.form['importance']
+        is_important = 1
+    except:
+        is_important = 0
+    title = request.form['title']
+    sdate = request.form['startDate'].replace('-','')
+    start_time = request.form['startTime']
+    end_time = request.form['endTime']
+    place = request.form['place']
+    memo = request.form['memo']
+    uid = session['uid']
+    params = (uid, sdate, title, place, start_time, end_time, is_important, memo)
+    sdao.insert_sched(params)
+    return redirect('/schedule/calendar/this')
+
+@schdedule_bp.route('/update', methods=['POST'])
+def update():
+    try:
+        _ = request.form['importance']
+        is_important = 1
+    except:
+        is_important = 0
+    sid = int(request.form['sid'])
+    title = request.form['title']
+    sdate = request.form['startDate'].replace('-','')
+    start_time = request.form['startTime']
+    end_time = request.form['endTime']
+    place = request.form['place']
+    memo = request.form['memo']
+    uid = session['uid']
+    params = (uid, sdate, title, place, start_time, end_time, is_important, memo, sid)
+    sdao.update_sched(params)
+    return redirect('/schedule/calendar/this')
+
+@schdedule_bp.route('/delete/<sid>')
+def delete(sid):
+    sdao.delete_sched(int(sid))
     return redirect('/schedule/calendar/this')

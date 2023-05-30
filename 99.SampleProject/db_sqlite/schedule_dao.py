@@ -6,7 +6,7 @@ def get_sched(sid):
 
     sql = 'select * from schedule where sid=?'
     cur.execute(sql, (sid,))
-    row = cur.fetchall()
+    row = cur.fetchone()
 
     cur.close()
     conn.close()
@@ -30,6 +30,28 @@ def insert_sched(params):
 
     sql = 'insert into schedule(uid, sdate, title, place, start_time, end_time, is_important, memo) values(?, ?, ?, ?, ?, ?, ?, ?)'
     cur.execute(sql, params)
+    conn.commit()
+
+    cur.close()
+    conn.close()
+
+def update_sched(params):
+    conn = sqlite3.connect('./db_sqlite/project.db')
+    cur = conn.cursor()
+
+    sql = 'update schedule set uid=?, sdate=?, title=?, place=?, start_time=?, end_time=?, is_important=?, memo=? where sid=?'
+    cur.execute(sql, params)
+    conn.commit()
+
+    cur.close()
+    conn.close()
+
+def delete_sched(sid):
+    conn = sqlite3.connect('./db_sqlite/project.db')
+    cur = conn.cursor()
+
+    sql = 'delete from schedule where sid=?'
+    cur.execute(sql, (sid,))
     conn.commit()
 
     cur.close()
