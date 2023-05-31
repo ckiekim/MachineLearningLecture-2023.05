@@ -7,7 +7,7 @@ def gen_schday(d, session_month, session_uid):
     schday = {}
     schday['day'] = d.day      # 1 ~ 31
     schday['webDate'] = (d.weekday() + 1) % 7
-    anniv_list = adao.get_anniv_list(d.strftime('%Y%m%d'), d.strftime('%Y%m%d'))
+    anniv_list = adao.get_anniv_list(d.strftime('%Y%m%d'), d.strftime('%Y%m%d'), session_uid)
     schday['isHoliday'] = 0
     for anniv in anniv_list:
         if anniv[3] == 1:

@@ -74,6 +74,7 @@ function annivClick(aid) {
 		success: function(jsonAnniv) {
 			let anniv = JSON.parse(jsonAnniv);
 			$('#aid').val(anniv.aid);
+			$('#uid').val(anniv.uid);
 			$('#aname2').val(anniv.aname);
 			if (anniv.isHoliday == 1)
 				$('#holiday2').prop('checked', true);
@@ -86,8 +87,9 @@ function annivClick(aid) {
 
 function deleteAnniv() {
 	let aid = $('#aid').val();
+	let uid = $('#uid').val();
 	const answer = confirm('정말로 삭제하시겠습니까?');
 	if (answer) {
-		location.href = '/schedule/deleteAnniv/' + aid;
+		location.href = `/schedule/deleteAnniv/${aid}/${uid}`;
 	}
 }

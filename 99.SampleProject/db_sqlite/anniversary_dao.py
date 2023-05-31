@@ -12,12 +12,15 @@ def get_anniv(aid):
     conn.close()
     return row
 
-def get_anniv_list(sdate, edate):
+def get_anniv_list(sdate, edate, uid):
     conn = sqlite3.connect('./db_sqlite/project.db')
     cur = conn.cursor()
 
-    sql = 'select * from anniversary where adate between ? and ?'
-    cur.execute(sql, (sdate, edate))
+    if uid == 'admin':
+        sql = "select * from anniversary where adate between ? and ? and uid=?"
+    else:
+        sql = "select * from anniversary where adate between ? and ? and (uid='admin' or uid=?)"
+    cur.execute(sql, (sdate, edate, uid))
     rows = cur.fetchall()
 
     cur.close()
@@ -28,7 +31,7 @@ def insert_anniv(params):
     conn = sqlite3.connect('./db_sqlite/project.db')
     cur = conn.cursor()
 
-    sql = 'insert into anniversary(aname, adate, is_holiday) values(?, ?, ?)'
+    sql = 'insert into anniversary(aname, adate, is_holiday, uid) values(?, ?, ?, ?)'
     cur.execute(sql, params)
     conn.commit()
 
@@ -39,7 +42,7 @@ def insert_anniv_many(params):
     conn = sqlite3.connect('./db_sqlite/project.db')
     cur = conn.cursor()
 
-    sql = 'insert into anniversary(aname, adate, is_holiday) values(?, ?, ?)'
+    sql = 'insert into anniversary(aname, adate, is_holiday, uid) values(?, ?, ?, ?)'
     cur.executemany(sql, params)
     conn.commit()
 
