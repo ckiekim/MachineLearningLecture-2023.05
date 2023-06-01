@@ -16,6 +16,16 @@ app.register_blueprint(chatbot_bp, url_prefix='/chatbot')
 app.register_blueprint(user_bp, url_prefix='/user')
 app.register_blueprint(schdedule_bp, url_prefix='/schedule')
 
+# for Error Handling ####################
+def page_not_found(e):
+    return render_template('error404.html')
+def server_error(e):
+    return render_template('error500.html')
+
+app.register_error_handler(404, page_not_found)
+app.register_error_handler(500, server_error)
+#########################################
+
 # flask 2.3 에서는 이 코드만 사용 가능
 """ with app.app_context():
     global quote, quotes            # quote, quotes 변수를 전역 변수로 만들어 줌
