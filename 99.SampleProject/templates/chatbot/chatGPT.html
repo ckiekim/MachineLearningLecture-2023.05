@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}chatGPT API{% endblock %}
+{% block weather %}{{ weather | safe() }}{% endblock %}
+{% block additional_head %} 
+    <script>
+        function send() {
+            let userInput = $('#userInput').val();
+            //$('#userInput').val('')
+            $.ajax({
+                type: 'POST',
+                url: '/chatbot/bard',
+                data: {userInput, userInput},
+                success: function(result) {
+                    let obj = JSON.parse(result);
+                }
+            });
+        }
+    </script>
+{% endblock %}
+{% block subtitle %}chatGPT API{% endblock %}
+{% block content %}
+    <div class="d-flex justify-content-center">
+        <div class="input-group mb-3" style="width: 80%;">
+            <input type="text" class="form-control" name="userInput" id="userInput" placeholder="생성할 이미지를 묘사해 주세요."
+                onkeyup="if(window.event.keyCode==13) {send()}">
+            <button class="btn btn-primary" onclick="send()">이미지 생성</button>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center">
+        <div class="container overflow-auto" id="container" style="width: 80%; height: 600px;">
+            <img id="result">
+        </div>
+   </div>
+{% endblock %}
