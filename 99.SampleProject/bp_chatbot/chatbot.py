@@ -6,6 +6,7 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import json, os, requests
 from urllib.parse import quote
+import openai
 
 chatbot_bp = Blueprint('chatbot_bp', __name__)
 menu = {'ho':0, 'us':0, 'cr':0, 'cb':1, 'sc':0}
@@ -56,6 +57,7 @@ def gen_img():
         with open(os.path.join(current_app.static_folder, 'keys/openAIapikey.txt')) as f:
             openAI_key = f.read()
         user_input = request.form['userInput']  # 'a photo of a happy corgi puppy sitting and facing me'
+
         headers = { 'Authorization': f'Bearer {openAI_key}', 
                     'Content-Type': 'application/json' }
         data = { 'model': 'image-alpha-001',

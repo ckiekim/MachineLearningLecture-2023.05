@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}chatGPT API{% endblock %}
+{% block title %}OpenAI API{% endblock %}
 {% block weather %}{{ weather | safe() }}{% endblock %}
 {% block additional_head %} 
     <script>
@@ -8,7 +8,7 @@
             //$('#userInput').val('')
             $.ajax({
                 type: 'POST',
-                url: '/chatbot/bard',
+                url: '/chatbot/genImg',
                 data: {userInput, userInput},
                 success: function(result) {
                     let obj = JSON.parse(result);
@@ -17,7 +17,7 @@
         }
     </script>
 {% endblock %}
-{% block subtitle %}chatGPT API{% endblock %}
+{% block subtitle %}OpenAI API{% endblock %}
 {% block content %}
     <div class="d-flex justify-content-center">
         <div class="input-group mb-3" style="width: 80%;">
