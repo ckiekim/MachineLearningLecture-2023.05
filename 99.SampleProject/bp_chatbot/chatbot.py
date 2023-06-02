@@ -52,7 +52,7 @@ def bard():
 @chatbot_bp.route('/genImg', methods=['GET','POST']) 
 def gen_img():
     if request.method == 'GET':
-        return render_template('chatbot/chatGPT.html', menu=menu)
+        return render_template('chatbot/openai.html', menu=menu)
     else:
         with open(os.path.join(current_app.static_folder, 'keys/openAIapikey.txt')) as f:
             openAI_key = f.read()
