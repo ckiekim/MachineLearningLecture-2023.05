@@ -55,17 +55,21 @@ def gen_img():
         return render_template('chatbot/openai.html', menu=menu)
     else:
         with open(os.path.join(current_app.static_folder, 'keys/openAIapikey.txt')) as f:
-            openAI_key = f.read()
+            openai.api_key = f.read()
         user_input = request.form['userInput']  # 'a photo of a happy corgi puppy sitting and facing me'
+        size = request.form['size']
 
-        headers = { 'Authorization': f'Bearer {openAI_key}', 
-                    'Content-Type': 'application/json' }
-        data = { 'model': 'image-alpha-001',
-                 'prompt': quote(user_input),
-                 'num_images': 1 }
-        req = requests.post('https://api.openai.com/v1/images/generations', 
-                            headers=headers, data=json.dumps(data))
+        gpt_prompt = [
+            {'role': 'system', 'content': 'Translate it in English'},
+            {'role': 'user', 'content': user_input}      
+        ]
+        gpt_response = openai.ChatCompletion.create(
+            model='gpt-3.5-turbo', messages=gpt_prompt
+        )
+        prompt = gpt_response['choices'][0]['message']['content']
+        dalle_response = openai.Image.create(
+            prompt=prompt, size=size         # '1024x1024', '512x512', '256x256'
+        )
+        img_url = dalle_response['data'][0]['url']
 
-        result = req.json()
-        print(result)
-        return json.dumps(result)
+        return json.dumps(img_url)

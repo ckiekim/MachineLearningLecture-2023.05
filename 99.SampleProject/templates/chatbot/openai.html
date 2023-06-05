@@ -5,13 +5,16 @@
     <script>
         function send() {
             let userInput = $('#userInput').val();
-            //$('#userInput').val('')
+            let size = $('#size').val();
+            console.log(size);
+            $('#result').attr({'src': "{{ url_for('static', filename='img/please-wait.gif') }}"})
             $.ajax({
                 type: 'POST',
                 url: '/chatbot/genImg',
-                data: {userInput, userInput},
+                data: {userInput: userInput, size: size},
                 success: function(result) {
-                    let obj = JSON.parse(result);
+                    let img_url = JSON.parse(result);
+                    $('#result').attr({'src': img_url})
                 }
             });
         }
