@@ -5,7 +5,7 @@
     <script>
         function send() {
             let userInput = $('#userInput').val();
-            let size = $('#size').val();
+            let size = $("input[name='size']:checked").val();
             console.log(size);
             $('#result').attr({'src': "{{ url_for('static', filename='img/please-wait.gif') }}"})
             $.ajax({
