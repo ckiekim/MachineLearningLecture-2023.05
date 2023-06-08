@@ -6,17 +6,15 @@
         function send() {
             let userInput = $('#userInput').val();
             let size = $("input[name='size']:checked").val();
-            $('#result').attr({'src': "{{ url_for('static', filename='img/please-wait.gif') }}"})
+            $('#generated_image').attr({'src': "{{ url_for('static', filename='img/please-wait.gif') }}"})
             $.ajax({
                 type: 'POST',
                 url: '/chatbot/genImg',
                 data: {userInput: userInput, size: size},
                 success: function(result) {
                     let res = JSON.parse(result);
-                    let img_url = res.img_url;
-                    let translated_text = res.translated_text;
-                    $('#generated_image').attr({'src': img_url});
-                    $('#translated_text').html(translated_text);
+                    $('#generated_image').attr({'src': res.img_url});
+                    $('#translated_text').html(res.translated_text);
                 }
             });
         }
