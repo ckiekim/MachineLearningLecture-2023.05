@@ -71,5 +71,6 @@ def gen_img():
             prompt=prompt, size=size         # '1024x1024', '512x512', '256x256'
         )
         img_url = dalle_response['data'][0]['url']
+        result = {'img_url':img_url, 'translated_text': prompt}
 
-        return json.dumps(img_url)
+        return json.dumps(result)
